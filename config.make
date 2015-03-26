@@ -5,12 +5,12 @@
 
 OF_ROOT = ../../..
 
-hpaths    = -I./physxNV/Include
+hpaths    = -I../physxNV/Include
 
-lpaths    = -L./physxNV/Lib/linux64
-lpaths    += -L./physxNV/lib/linux64
-lpaths    += -L./physxNV/Bin/linux64
-lpaths    += -L./physxNV/lib/linux64
+lpaths    = -L../physxNV/Lib/linux64
+lpaths    += -L../physxNV/lib/linux64
+lpaths    += -L../physxNV/Bin/linux64
+lpaths    += -L../physxNV/lib/linux64
 
 defines   = -DPHYSX_PROFILE_SDK
 defines   += -DRENDER_SNIPPET
@@ -39,18 +39,36 @@ libraries += -lX11
 libraries += -lrt
 libraries += -lpthread
 
+cflags = -MMD
 cflags += $(defines)
 cflags += $(hpaths)
+cflags += -m64
 
-lflags  += -L, $(lpaths)
-lflags  += -Wl,--start-group $(libraries) -Wl,--end-group
+cflags  += -m64 -fPIC -msse2 -mfpmath=sse -ffast-math -fexceptions -frtti -fvisibility=hidden -fvisibility-inlines-hidden
+cflags  += -Wall -Wextra -fdiagnostics-show-option
+cflags  += -Wno-long-long
+cflags  += -Wno-unknown-pragmas -Wno-invalid-offsetof -Wno-uninitialized
+cflags  += -Wno-unused-parameter
+cflags  += -g3 -gdwarf-2
+
+cppflags  += -m64 -fPIC -msse2 -mfpmath=sse -ffast-math -fexceptions -frtti -fvisibility=hidden -fvisibility-inlines-hidden
+cppflags  += -Wall -Wextra -fdiagnostics-show-option
+cppflags  += -Wno-long-long
+cppflags  += -Wno-unknown-pragmas -Wno-invalid-offsetof -Wno-uninitialized
+cppflags  += -Wno-unused-parameter
+cppflags  += -g3 -gdwarf-2
+
+lflags    += -L, $(lpaths)
+lflags    += -Wl,--start-group $(libraries) -Wl,--end-group
 lflags  += -lrt
+lflags  += -m64
 
 # USER_CFLAGS allows to pass custom flags to the compiler
 # for example search paths like:
 # USER_CFLAGS = -I src/objects
 
-USER_CFLAGS = $(cflags)
+USER_CFLAGS = $(cflags) $(cppflags)
+
 
 # USER_LDFLAGS allows to pass custom flags to the linker
 # for example libraries like:
